@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
@@ -18,6 +19,7 @@ public class Main {
 				2.3. Mostrar el nombre de cada jugador y el deporte que juega usando una query
 				2.4. Preguntar al usuario el COD de un deporte para borrarlo a éste y a los jugadores asociados
 */
+		Scanner lee = new Scanner(System.in);
 
 		System.out.println("Conectamos a la BD");
 		String urlJDBC = "jdbc:hsqldb:sample.db";
@@ -28,34 +30,36 @@ public class Main {
         
         boolean salir = false;
         while(!salir) {
-	        switch (menu()) {
-	        case 0:
-	        	salir = true;
-	        	break;
-	        case 1:
-	        	//1) Agregar nuevo deporte
-	            
-	        	break;
-	        case 2:
-	        	//2) Agregar nuevo jugador
-	            
-	        	break;
-	        case 3:
-	        	//3) Info. de jugador por su ID
-	            
-	        	break;
-	        case 4:
-	        	//4) Borrar deporte y sus jugadores
-	        	
-	        	break;
-	        	
+        	
+	        switch (menu(lee)) {
+		        case 0:
+		        	salir = true;
+		        	break;
+		        case 1:
+		        	//1) Agregar nuevo deporte
+		            creaNuevoDeporte(con, lee);
+		        	break;
+		        case 2:
+		        	//2) Agregar nuevo jugador
+		        	creaNuevoJugador(con, lee);
+		        	break;
+		        case 3:
+		        	//3) Info. de jugador por su ID
+		        	System.out.println("3");
+		        	break;
+		        case 4:
+		        	//4) Borrar deporte y sus jugadores
+		        	System.out.println("4");
+		        	break;
+		        	
 	        }
-        }
-        
+    	}
         
         
         System.out.println("Cerramos conexion a la BD.");
         con.close();
+        
+        lee.close();
 	}
 
 	
@@ -63,6 +67,33 @@ public class Main {
 	
 	
 	
+	private static void creaNuevoJugador(Connection con, Scanner lee) {
+		// TODO Esbozo de método generado automáticamente
+		
+	}
+
+
+
+
+
+
+	private static void creaNuevoDeporte(Connection con, Scanner lee) throws SQLException {
+		System.out.print("Nombre del nuevo deporte: ");
+		String deporte = lee.next();
+		
+		String query = "INSERT INTO sports (deporte) VALUES (?); ";
+		PreparedStatement ps = con.prepareStatement(query);
+		ps.setString(1, deporte);
+		ps.executeUpdate();
+		
+		System.out.println("Agregado " + deporte + " a la tabla sports.");
+	}
+
+
+
+
+
+
 	public static void creaTablas(Connection con) throws SQLException {
         // Crear tablas, si no existen
         try (Statement stmt = con.createStatement()) {
@@ -82,8 +113,7 @@ public class Main {
 	}
 	
 	
-	public static int menu() {
-        Scanner scanner = new Scanner(System.in);
+	public static int menu(Scanner lee) {
         int retorno;
 
         do {
@@ -95,17 +125,16 @@ public class Main {
             System.out.println();
             System.out.println("0) Salir");
             System.out.println();
-            System.out.println("Elige una opción y pulsa Intro: ");
+            System.out.print("Elige una opción y pulsa Intro: ");
             System.out.println();
-
-            retorno = scanner.nextInt();
+            
+            retorno = lee.nextInt();
 
             if (retorno < 0 || retorno > 4) {
                 System.out.println("Opción inválida. Inténtalo de nuevo.");
             }
         } while (retorno < 0 || retorno > 4);
 
-        scanner.close();
         return retorno;
     }
         
