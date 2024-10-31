@@ -52,11 +52,14 @@ public class Main {
 		        	//4) Borrar deporte y sus jugadores
 		        	borraDeporteID(con, teclado);
 		        	break;
-		        	
+		        case 5:
 		        	//5) Muestra deportes
-		        	
+		        	muestraDeportes(con);
+		        	break;
+		        case 6:
 		        	//6) Muestra Jugadores
-		        	
+		        	muestraJugadores(con);
+		        	break;
 	        }
     	}
         
@@ -73,12 +76,11 @@ public class Main {
 		    System.out.print("ID del deporte: ");
 		    int sportID = teclado.nextInt();
 
-		    // averiguamos nombre y sportID
 		    String query = "DELETE FROM sports WHERE id = ?;";
 		    PreparedStatement pstmt = con.prepareStatement(query);
 		    pstmt.setInt(1, sportID);
 
-		    ResultSet rs = pstmt.executeQuery();
+		    pstmt.executeUpdate(); //Como no esperamos retorno usamos .executeUpdate() en lugar de .executeQuery()
 
 		    System.out.println("Eliminado.");
 	}
@@ -89,7 +91,6 @@ public class Main {
 	    System.out.print("ID del jugador: ");
 	    int jugadorID = teclado.nextInt();
 
-	    // averiguamos nombre y sportID
 	    String query = "SELECT * FROM players WHERE id = ?";
 	    PreparedStatement pstmt = con.prepareStatement(query);
 	    pstmt.setInt(1, jugadorID);
@@ -151,7 +152,7 @@ public class Main {
 		System.out.print("Nombre del nuevo deporte: ");
 		String deporte = teclado.next();
 		
-		String query = "INSERT INTO sports (deporte) VALUES (?); ";
+		String query = "INSERT INTO sports (name) VALUES (?); ";
 		PreparedStatement ps = con.prepareStatement(query);
 		ps.setString(1, deporte);
 		ps.executeUpdate();
@@ -228,6 +229,8 @@ public class Main {
             System.out.println("2) Agregar nuevo jugador");
             System.out.println("3) Info. de jugador por su ID");
             System.out.println("4) Borrar deporte y sus jugadores");
+            System.out.println("5) Muestra deportes");
+            System.out.println("6) Muestra jugadores");
             System.out.println();
             System.out.println("0) Salir");
             System.out.println();
@@ -235,10 +238,10 @@ public class Main {
             
             retorno = teclado.nextInt();
 
-            if (retorno < 0 || retorno > 4) {
+            if (retorno < 0 || retorno > 6) {
                 System.out.println("Opción inválida. Inténtalo de nuevo.");
             }
-        } while (retorno < 0 || retorno > 4);
+        } while (retorno < 0 || retorno > 6);
 
         return retorno;
     }
